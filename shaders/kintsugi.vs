@@ -9,6 +9,8 @@ uniform mat4 mvp;
 uniform mat4 matModel;
 uniform mat4 matNormal;
 
+uniform bool applyModel;
+
 out vec3 fragPosition;
 out vec3 fragNormal;
 out vec2 fragTexCoord;
@@ -20,8 +22,12 @@ void main() {
     fragColor = vertexColor;
     // project position
     gl_Position = mvp * vec4(vertexPosition, 1.0);
-    // send fragment shader the location of the vertex in world space
-    fragPosition = (matModel * vec4(vertexPosition, 1.0)).xyz;
+    // send fragment shader the location of the vertex in model or world space
+    if (applyModel) {
+        fragPosition = (matModel * vec4(vertexPosition, 1.0)).xyz;
+    } else {
+        fragPosition = vertexPosition;
+    }
     // send fragment shader the vertex normal for shading
     fragNormal = normalize(vec3(matNormal * vec4(vertexNormal, 1.0)));
 }

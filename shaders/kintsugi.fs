@@ -7,6 +7,9 @@ in vec4 fragColor;
 
 uniform vec4 colDiffuse;
 
+uniform vec3 crackColor;
+uniform vec3 surfaceColor;
+
 out vec4 finalColor;
 
 // selected based on ~~random dice roll~~ python script, no special attributes
@@ -80,13 +83,13 @@ void main() {
     }
     if (lastIndex == -1) {
         // black edges in between cells
-        finalColor = vec4(vec3(0.0), 1.0);
+        finalColor = vec4(crackColor, 1.0);
     } else {
         // toon-ish shading
         float toonShade = dot(fragNormal, vec3(0.5773502691896257, 0.5773502691896257, 0.5773502691896257));
         toonShade = 8.0 * toonShade - 4.0;
         toonShade = clamp(((sign(toonShade) * pow(toonShade, 0.8)) + 3.0) * 0.25, 0.5, 1.0);
-        finalColor = vec4(vec3(toonShade), 1.0);
+        finalColor = vec4(toonShade * surfaceColor, 1.0);
     }
     // apply tint
     finalColor *= colDiffuse * fragColor;
